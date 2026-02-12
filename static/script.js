@@ -26,6 +26,11 @@ document.getElementById("analysisForm").addEventListener("submit", async functio
   formData.append("latitude", document.getElementById("latitude").value);
   formData.append("longitude", document.getElementById("longitude").value);
   formData.append("land_image", document.getElementById("land_image").files[0]);
+  formData.append("bedrooms", document.getElementById("bedrooms").value);
+  formData.append("bathrooms", document.getElementById("bathrooms").value);
+  formData.append("kitchen", document.getElementById("kitchen").value);
+  formData.append("hall", document.getElementById("hall").value);
+ 
 
   const response = await fetch("/analyze", {
     method: "POST",
@@ -74,7 +79,22 @@ document.querySelectorAll(".filter-bar button").forEach(btn => {
         lastResponse.materials.map(m => `<p>• ${m}</p>`).join(""),
 
       assumptions: "<h3>AI Notes</h3>" +
-        lastResponse.assumptions.map(a => `<p>✔ ${a}</p>`).join("")
+        lastResponse.assumptions.map(a => `<p>✔ ${a}</p>`).join(""),
+      blueprint: `
+        <h3>Floor Blueprints</h3>
+
+        ${Object.entries(lastResponse.blueprints).map(([floor, path]) => `
+            <h4 style="margin-top:20px;">${floor}</h4>
+            <img src="/${path}?t=${new Date().getTime()}"
+                style="width:100%; max-width:650px;
+                        border:1px solid #ccc;
+                        border-radius:10px;
+                        margin-bottom:20px;">
+        `).join("")}
+      `
+
+
+
     };
 
     panel.innerHTML = templates[view] || "<p>No data</p>";
@@ -107,4 +127,41 @@ document.getElementById("downloadPdf").addEventListener("click", async function 
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+});
+// CHAT SEND
+document.getElementById("chatInput").addEventListener("keypress", async function (e) {
+  if (e.key !== "Enter") return;
+
+  const msg = this.value.trim();
+  if (!msg) return;
+
+  const chatBox = document.getElementById("chatMessages");
+
+  // show user message
+  chatBox.innerHTML += `<div class="user-msg">${msg}</div>`;
+  this.value = "";
+
+  // loading bubble
+  const loading = document.createElement("div");
+  loading.className = "bot-msg";
+  loading.innerText = "Thinking...";
+  chatBox.appendChild(loading);
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg })
+    });
+
+    const data = await res.json();
+
+    loading.remove();
+    chatBox.innerHTML += `<div class="bot-msg">${data.reply}</div>`;
+  } catch {
+    loading.innerText = "Error connecting to AI.";
+  }
+
+  chatBox.scrollTop = chatBox.scrollHeight;
 });

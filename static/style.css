@@ -165,32 +165,104 @@ input, select {
   min-height: 300px;
 }
 
-/* CHATBOT */
+/* ================= CHATBOT FINAL FIX ================= */
+
 .chatbot {
   position: fixed;
-  bottom: 32px;
-  right: 32px;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
 }
 
-#chatToggle {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--primary);
-  border: none;
-  box-shadow: 0 4px 12px rgba(56,189,248,0.4);
-  cursor: pointer;
-}
-
+/* Floating chat window */
 #chatWindow {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+
   width: 320px;
-  height: 400px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  margin-bottom: 8px;
+  height: 420px;
+
+  background: #0f172a;
+  border-radius: 16px;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
 }
 
+/* Hidden state */
 .chat-hidden {
-  display: none;
+  display: none !important;
+}
+
+/* Header */
+.chat-header {
+  background: #1e293b;
+  color: #fff;
+  padding: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Messages */
+.chat-messages {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Message bubbles */
+.bot-msg,
+.user-msg {
+  padding: 10px 12px;
+  border-radius: 12px;
+  max-width: 80%;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.bot-msg {
+  background: #1e293b;
+  color: #e2e8f0;
+  align-self: flex-start;
+}
+
+.user-msg {
+  background: #3b82f6;
+  color: #fff;
+  align-self: flex-end;
+}
+
+/* Input area */
+.chat-input-area {
+  border-top: 1px solid #1e293b;
+  padding: 10px;
+}
+
+#chatInput {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Toggle button */
+.chat-toggle-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: #3b82f6;
+  color: #fff;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
 }
